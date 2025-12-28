@@ -5,10 +5,11 @@ import jwt from "jsonwebtoken";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "Strict",
-  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+  sameSite: "none",
+  secure: true, // 🔥 MUST be true for Vercel ↔ Render
+  maxAge: 30 * 24 * 60 * 60 * 1000,
 };
+
 
 export const register = async (req, res) => {
   const {fullName, email, password} = req.body;
@@ -55,6 +56,10 @@ export const verify = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  res.clearCookie("token", {httpOnly: true, sameSite: "Strict"});
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
   res.json({message: "Logged out successfully"});
 };
